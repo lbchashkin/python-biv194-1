@@ -8,6 +8,14 @@ import tkinter as tk
 from tkinter import ttk
 
 """
+Функция изменения цвета кнопок
+"""
+def clck(all_buttons):
+	all_buttons[0].config(bg = 'yellow')
+	for i in range(1, len(all_buttons)):
+		all_buttons[i].config(bg = 'SystemButtonFace')
+
+"""
 Функция main_window - создаёт главное окно
 Автор: Чашкин Л.
 """
@@ -38,12 +46,16 @@ def main_window():
     button5 = tk.Button(root, text = 'Загрузить базу данных')
     button6 = tk.Button(root, text = 'Сформировать отчёт')
     table_analiz = tk.Button(root, text = 'Анализы')
+    table_analiz['command'] = lambda: clck((table_analiz, table_schools, table_students, all_tables))
     table_schools = tk.Button(root, text = 'Школа', bg = "yellow")
+    table_schools['command'] = lambda: clck((table_schools, table_analiz, table_students, all_tables))
     table_students = tk.Button(root, text = 'Ученики')
+    table_students['command'] = lambda: clck((table_students, table_analiz, table_schools, all_tables))
     all_tables = tk.Button(root, text = 'Полный список')
+    all_tables['command'] = lambda: clck((all_tables, table_students, table_analiz, table_schools))
     
     #Таблица
-    tree = ttk.Treeview(root, columns = ('school', 'doctor', 'phone'), selectmode = "extended", height = 20, show = 'headings')
+    tree = ttk.Treeview(root, columns = ('school', 'doctor', 'phone'), selectmode = "browse", height = 20, show = 'headings')
     tree.heading('school', text = 'Школа')
     tree.heading('doctor', text = 'Врач')
     tree.heading('phone', text = 'Телефон')
