@@ -25,6 +25,17 @@ sys.path.append(os.path.join(os.getcwd(), 'Library'))
 import functions
 tah = (font, 12)
 
+def sorting(tree, base, col):
+    if col == 'Дата рождения' or col == 'Дата приёма':
+        index = pd.to_datetime(delete_nan(base)[col], format='%d.%m.%Y').sort_values().index
+    else:
+        index = delete_nan(base).sort_values(by = col).index
+    children = tree.get_children()
+    for i in children:
+        tree.delete(int(i))
+    for i in index:
+        tree.insert('', 'end', i, values = list(base.loc[i]))
+
 def merging(analyses, schools, students):
     """
     Функция объединения таблиц
@@ -203,12 +214,12 @@ def table_analyzes(buttons, tree, chart):
     tree.column('glucose', width=150, anchor=tk.CENTER)
     tree.column('insulin', width=150, anchor=tk.CENTER)
     tree.column('flu', width=200, anchor=tk.CENTER)
-    tree.heading('student', text='Ученик')
-    tree.heading('school', text='Школа')
-    tree.heading('date', text='Дата приёма')
-    tree.heading('glucose', text='Глюкоза')
-    tree.heading('insulin', text='Инсулин')
-    tree.heading('flu', text='Прививка от гриппа')
+    tree.heading('student', text='Ученик', command=lambda: sorting(tree, chart, 'Ученик'))
+    tree.heading('school', text='Школа', command=lambda: sorting(tree, chart, 'Школа'))
+    tree.heading('date', text='Дата приёма', command=lambda: sorting(tree, chart, 'Дата приёма'))
+    tree.heading('glucose', text='Глюкоза', command=lambda: sorting(tree, chart, 'Глюкоза, ммоль/л'))
+    tree.heading('insulin', text='Инсулин', command=lambda: sorting(tree, chart, 'Инсулин, мкЕд/мл'))
+    tree.heading('flu', text='Прививка от гриппа', command=lambda: sorting(tree, chart, 'Прививка от гриппа'))
     tree.grid(row=4, column=0, columnspan=7, sticky='nsew', padx=2)
     i = iter(chart.index)
     for item in chart.values:
@@ -242,9 +253,9 @@ def table_school(buttons, tree, chart):
     tree.column('school', width=375, anchor=tk.CENTER)
     tree.column('doctor', width=375, anchor=tk.CENTER)
     tree.column('phone', width=375, anchor=tk.CENTER)
-    tree.heading('school', text='Школа')
-    tree.heading('doctor', text='Врач')
-    tree.heading('phone', text='Телефон')
+    tree.heading('school', text='Школа', command=lambda: sorting(tree, chart, 'Школа'))
+    tree.heading('doctor', text='Врач', command=lambda: sorting(tree, chart, 'Врач'))
+    tree.heading('phone', text='Телефон', command=lambda: sorting(tree, chart, 'Номер телефона школы'))
     tree.grid(row=4, column=0, columnspan=7, sticky='nsew', padx=2)
     i = iter(chart.index)
     for item in chart.values:
@@ -278,9 +289,9 @@ def table_students(buttons, tree, chart):
     tree.column('student', width=375, anchor=tk.CENTER)
     tree.column('school', width=375, anchor=tk.CENTER)
     tree.column('date', width=375, anchor=tk.CENTER)
-    tree.heading('student', text='Ученик')
-    tree.heading('school', text='Школа')
-    tree.heading('date', text='Дата рождения')
+    tree.heading('student', text='Ученик', command=lambda: sorting(tree, chart, 'Ученик'))
+    tree.heading('school', text='Школа', command=lambda: sorting(tree, chart, 'Школа'))
+    tree.heading('date', text='Дата рождения', command=lambda: sorting(tree, chart, 'Дата рождения'))
     tree.grid(row=4, column=0, columnspan=7, sticky='nsew', padx=2)
     i = iter(chart.index)
     for item in chart.values:
@@ -321,15 +332,15 @@ def table(buttons, tree, chart):
     tree.column('flu', width=70, anchor=tk.CENTER)
     tree.column('date', width=100, anchor=tk.CENTER)
     tree.column('doctor', width=245, anchor=tk.CENTER)
-    tree.heading('student', text='Ученик')
-    tree.heading('date_bir', text='Дата рождения')
-    tree.heading('school', text='Школа')
-    tree.heading('phone', text='Номер телефона школы')
-    tree.heading('glucose', text='Глюкоза')
-    tree.heading('insulin', text='Инсулин')
-    tree.heading('flu', text='Прививка')
-    tree.heading('date', text='Дата приёма')
-    tree.heading('doctor', text='Врач')
+    tree.heading('student', text='Ученик', command=lambda: sorting(tree, chart, 'Ученик'))
+    tree.heading('date_bir', text='Дата рождения', command=lambda: sorting(tree, chart, 'Дата рождения'))
+    tree.heading('school', text='Школа', command=lambda: sorting(tree, chart, 'Школа'))
+    tree.heading('phone', text='Номер телефона школы', command=lambda: sorting(tree, chart, 'Номер телефона школы'))
+    tree.heading('glucose', text='Глюкоза', command=lambda: sorting(tree, chart, 'Глюкоза, ммоль/л'))
+    tree.heading('insulin', text='Инсулин', command=lambda: sorting(tree, chart, 'Инсулин, мкЕд/мл'))
+    tree.heading('flu', text='Прививка', command=lambda: sorting(tree, chart, 'Прививка от гриппа'))
+    tree.heading('date', text='Дата приёма', command=lambda: sorting(tree, chart, 'Дата приёма'))
+    tree.heading('doctor', text='Врач', command=lambda: sorting(tree, chart, 'Врач'))
     tree.grid(row=4, column=0, columnspan=7, sticky='nsew', padx=2)
     i = iter(chart.index)
     for item in chart.values:
